@@ -13,7 +13,7 @@ def report(message=None):
     
 
     token = config.EMERGENCY_BOT_TOKEN
-    for chat_id in config.EMERGENCY_CONTACT_IDS:
+    for chat_id in config.ADMIN_IDS:
         url = f'https://api.telegram.org/bot{token}/'   
         requests.get(url + 'sendMessage', params = {
             'chat_id': chat_id,

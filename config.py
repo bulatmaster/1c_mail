@@ -10,9 +10,12 @@ IMAP_PORT = getenv('IMAP_PORT')
 EMAIL_ACCOUNT = getenv('EMAIL_ACCOUNT')
 EMAIL_PASSWORD = getenv('EMAIL_PASSWORD')
 
+EMAIL_FROM = getenv('FROM_EMAIL')
 
-FROM_EMAIL = getenv('FROM_EMAIL')
 
+BOT_TOKEN = getenv('BOT_TOKEN')
+ADMIN_IDS = [int(user_id) for user_id in getenv('ADMIN_IDS').split(',')]
 
 EMERGENCY_BOT_TOKEN = getenv('EMERGENCY_BOT_TOKEN')
-EMERGENCY_CONTACT_IDS = getenv('EMERGENCY_CONTACT_IDS')
+
+db_path = 'data/database.db'
