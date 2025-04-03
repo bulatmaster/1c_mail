@@ -88,6 +88,9 @@ def process_message(mail, num):
     register_message(account, from_account, uid, subject, message_date, file_paths)
     logging.info(f'Зарегистрировано новое письмо uid {uid}')
 
+    logging.debug('Помечаю прочитанным')
+    mail.store(num, '+FLAGS', '\\Seen')
+
 
 def save_pdf_attachments(msg, uid) -> list:
     """

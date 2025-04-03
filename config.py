@@ -18,4 +18,6 @@ ADMIN_IDS = [int(user_id) for user_id in getenv('ADMIN_IDS').split(',')]
 
 EMERGENCY_BOT_TOKEN = getenv('EMERGENCY_BOT_TOKEN')
 
+REPORTS_CHAT_ID = getenv('REPORTS_CHAT_ID')
+
 db_path = 'data/database.db'

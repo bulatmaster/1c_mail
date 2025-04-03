@@ -31,45 +31,75 @@ async def process_message(bot: Bot, message: sqlite3.Row):
         'SELECT * FROM email_files WHERE message_rowid = ?',
         (message_rowid, )
     ).fetchall()
+    subject = message['message_subject']
+    
+    receiver_user_id = None
+    error = ''
 
+    # Проверка на наличие файла 
     if not message_files:
-        await handle_unsuccess(bot, message, 'Нет вложений в письме')
-        return 
+        error += 'В письме нет PDF-вложений;\n'
 
+    # Поиск менеджера по имени в теме письма
     managers = {name: id for (id, name) in conn.execute(
         'SELECT id, manager_name FROM managers'
     )}
-
-    subject = message['message_subject']
     manager_id = None
     for name in managers:
         if name in subject:
             manager_id = managers[name]
             break 
-    
     if not manager_id:
-        await handle_unsuccess(bot, message, 'Не найден менеджер')
-        return 
-    
-    manager = conn.execute(
-        'SELECT * FROM managers WHERE id = ?',
-        (manager_id, )
-    ).fetchone()
-    if not manager['tg_user_id']:
-        await handle_unsuccess(bot, message, 'Менеджер не зашёл в бота')
-        return 
-    
-    manager_user_id = manager['tg_user_id']
-    caption = message['message_subject']
+        error += 'Не найден менеджер;\n'
 
+    if manager_id:
+        manager = conn.execute(
+            'SELECT * FROM managers WHERE id = ?',
+            (manager_id, )
+        ).fetchone()
+        if not manager['tg_username']:
+            error += 'Не указан юзернейм менеджера;\n'
+        if not manager['tg_user_id']:
+            error += 'Менеджер не зашёл в бота;\n'
+    
+        receiver_user_id = manager['tg_user_id']
+
+    if error:
+        caption = (
+            f'Сообщение не переслано \n'
+            f'Тема: {subject} \n'
+            f'Дата письма: {message["message_date"]}\n'
+            f'Ошибка:\n '
+            f'{error}'
+        )
+        receiver_user_id = config.REPORTS_CHAT_ID
+
+    else:
+        caption = message['message_subject']
+    
     try:
         for file in message_files:
             file_path = file['filepath']
-            await bot.send_document(manager_user_id, FSInputFile(file_path), caption=caption)
+            await bot.send_document(receiver_user_id, FSInputFile(file_path), caption=caption)
+    
     except Exception as e:
-        error = f'{e.__class__.__name__}: {e}'
-        await handle_unsuccess(bot, message, error)
-        return 
+        sending_error = f'{e.__class__.__name__}: {e}'
+        await emergency.report(f'Ошибка при пересылке документа: {sending_error}')
+        return
+
+    rowid = message['rowid']
+    success = 1 if not error else 0
+    with conn:
+        conn.execute(
+            """
+            UPDATE email_messages SET
+                is_processed = 1,
+                processed_timestamp = CURRENT_TIMESTAMP,
+                success = ?,
+                error = ?
+            WHERE rowid = ?
+            """, (success, error, rowid)
+        )
 
     
 

@@ -14,7 +14,8 @@ CREATE TABLE email_messages (
     record_timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
     is_processed INTEGER DEFAULT 0, 
     processed_timestamp TEXT,
-    success INTEGER
+    success INTEGER,
+    error TEXT
 );
 CREATE TABLE email_files (
     message_rowid INTEGER,
