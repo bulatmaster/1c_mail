@@ -10,6 +10,7 @@ if os.path.exists(config.db_path):
     os.remove(config.db_path)
 
 os.makedirs('data', exist_ok=True)
+os.makedirs('logs', exist_ok=True)
 
 with sqlite3.connect(config.db_path) as conn:
     with open('schema.sql') as f:
