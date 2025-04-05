@@ -57,7 +57,7 @@ async def admin_disp(message: Message):
                     await h.manager_remove_access_confirmation(bot, user_id)
         case 'manager_name_input':
             await h.manager_name_save(bot, user_id, text)
-        case 'manager_delete_confirmation':
+        case 'manager_remove_access_confirmation':
             match text:
                 case 'Да':
                     await h.manager_remove_access(bot, user_id)

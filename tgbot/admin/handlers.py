@@ -109,6 +109,7 @@ async def process_request(bot, user_id, manager_name):
             """, (manager_name, new_user_id)
         )
     await bot.send_message(user_id, 'OK')
+    await see_request(bot, user_id)
 
 
 
@@ -232,7 +233,7 @@ async def manager_name_save(bot, user_id, manager_name):
 
 
 async def manager_remove_access_confirmation(bot, user_id):
-    await bot.send_message(user_id, 'Закрыть доступ?', reply_markup=kb('< назад'))
+    await bot.send_message(user_id, 'Закрыть доступ?', reply_markup=kb('Да', '< назад'))
     set_state(user_id)
 
 
