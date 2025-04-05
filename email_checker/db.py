@@ -17,13 +17,13 @@ def register_message(account, from_account, uid, subject, message_date, file_pat
         (message_rowid, ) = conn.execute(
             'SELECT last_insert_rowid() FROM email_messages'
         ).fetchone()
-        for filepath in file_paths:
+        for file_path in file_paths:
             conn.execute(
                 """
                 INSERT INTO email_files
-                (message_rowid, filepath)
+                (message_rowid, file_path)
                 VALUES (?, ?)
-                """, (message_rowid, filepath)
+                """, (message_rowid, file_path)
             )
     conn.close()
 

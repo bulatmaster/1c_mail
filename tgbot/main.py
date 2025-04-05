@@ -5,11 +5,13 @@ import sys
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.types import ErrorEvent
+from aiogram.types import ErrorEvent, Message
 
-from tgbot import disp, docs_processing
 import config 
 import emergency
+from tgbot.admin.disp import admin_disp
+from tgbot.user.disp import user_disp
+from tgbot.email_parser import email_parser
 
 
 
@@ -28,16 +30,30 @@ async def errors_handler(event: ErrorEvent):
     raise 
 
 
+async def messages_handler(message: Message, bot: Bot):
+    if message.chat.type != 'private':
+        return
+    
+    user_id = message.from_user.id
+    text = message.text
+
+    if user_id in config.ADMIN_IDS:
+        await admin_disp(message)
+    else:
+        await user_disp(message)
+        return 
+
+
 async def main():
     bot = Bot(
         token=config.BOT_TOKEN, 
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
     dp = Dispatcher()
-    dp.message.register(disp.messages_handler)
+    dp.message.register(messages_handler)
     dp.errors.register(errors_handler)
 
-    asyncio.create_task(docs_processing.main(bot))
+    asyncio.create_task(email_parser.main(bot))
 
     await dp.start_polling(bot)
 

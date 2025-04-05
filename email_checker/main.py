@@ -23,12 +23,16 @@ logging.basicConfig(
 )
 
 
-
 def main():
     logging.info('- запуск мониторинга почты -')
     while True:
-        check_inbox()
-        time.sleep(300)
+        try:
+            check_inbox()
+        except Exception as e:
+            emergency.report(f'email_checker: {e.__class__.__name__}: {e}')
+            logging.exception(e)
+        finally:
+            time.sleep(300)
     
 
 
@@ -40,7 +44,7 @@ def check_inbox():
     mail.login(config.EMAIL_ACCOUNT, config.EMAIL_PASSWORD)
 
     mail.select("inbox")
-    status, messages = mail.search(None, f'(FROM "{config.EMAIL_FROM}")')
+    status, messages = mail.search(None, 'ALL')
     if status != "OK":
         emergency.report('Не удалось получить письма')
         logging.error("Не удалось получить письма")
@@ -101,6 +105,7 @@ def save_pdf_attachments(msg, uid) -> list:
 
     file_paths = []
 
+    n = 0
     for part in msg.walk():
         content_type = part.get_content_type()
         content_disposition = str(part.get("Content-Disposition") or "")
@@ -109,9 +114,10 @@ def save_pdf_attachments(msg, uid) -> list:
         if not content_type == 'application/pdf':
             continue 
         
+        n += 1
         original_filename = part.get_filename()
         original_filename = decode_mime_words(original_filename)
-        save_filename = f'{original_filename.split(".pdf")[0]}_{uid}.pdf'
+        save_filename = f'{original_filename.split(".pdf")[0]}_{uid}_{n}.pdf'
         save_path = os.path.join(SAVE_FOLDER, save_filename)
         with open(save_path, "wb") as f:
             f.write(part.get_payload(decode=True))
