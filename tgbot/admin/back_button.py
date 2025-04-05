@@ -17,7 +17,7 @@ async def back_button_handler(bot: Bot, user_id, state):
         case 'declined_requests_menu':
             await h.managers_menu(bot, user_id)
         case 'manager_menu':
-            selected_user_id = get_select_id
+            selected_user_id = get_select_id(user_id)
             selected_user = conn.execute(
                 'SELECT * FROM tg_users WHERE user_id = ?', 
                 (selected_user_id, )
