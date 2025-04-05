@@ -228,7 +228,7 @@ async def manager_name_save(bot, user_id, manager_name):
             WHERE user_id = ?
             """, (manager_name, manager_user_id)
         )
-    await bot.send_message('OK')
+    await bot.send_message(user_id, 'OK')
     await manager_menu(bot, user_id)
 
 
