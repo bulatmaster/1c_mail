@@ -58,5 +58,8 @@ async def messages_handler(message: Message, bot: Bot):
             await h.manager_username_save(bot, user_id, text)
         case 'manager_delete_confirm':
             await h.manager_delete(bot, user_id, text)
+        
+        case None:
+            await h.main_menu(bot, user_id)
 
 

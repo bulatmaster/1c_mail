@@ -17,3 +17,6 @@ async def back_button_handler(bot: Bot, user_id, state):
             await h.manager_menu(bot, user_id)
         case 'manager_delete_confirm':
             await h.manager_menu(bot, user_id)
+        
+        case _:
+            await h.main_menu(bot, user_id)

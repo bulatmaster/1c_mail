@@ -38,6 +38,8 @@ def set_state(user_id):
 
 def get_state(user_id):
     admin = get_admin(user_id)
+    if not admin:
+        return None
     return admin['fsm_state']
 
 
