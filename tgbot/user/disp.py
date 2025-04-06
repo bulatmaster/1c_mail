@@ -20,8 +20,8 @@ async def user_disp(message: Message):
         await message.answer('Спасибо! Ваш запрос в обработке.')
         
         for admin_id in config.ADMIN_IDS:
-            await bot.send_message(admin_id, '🟢 Новый запрос на присоединение')
-        await bot.send_message(config.REPORTS_CHAT_ID, '🟢 Новый запрос на присоединение')
+            await bot.send_message(admin_id, '🟢 Новый запрос \n Смотреть: /start')
+        await bot.send_message(config.REPORTS_CHAT_ID, '🟢 Новый запрос в боте')
     
     elif user['is_request_declined']:
         await message.answer(
