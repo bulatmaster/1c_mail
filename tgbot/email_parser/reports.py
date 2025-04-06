@@ -62,7 +62,7 @@ async def report_success(bot: Bot, message: sqlite3.Row, manager: sqlite3.Row):
 
 async def report_filter_not_passed(bot, message, reason):
     report = (
-        f'ℹ️ Письмо не прошло фильтр \n'
+        f'ℹ️ Проигнорировано письмо \n'
         f'\n'
         f'От: {message["from_account"]} \n'
         f'Тема: {message["message_subject"]} \n'
