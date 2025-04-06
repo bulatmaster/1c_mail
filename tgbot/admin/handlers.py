@@ -128,9 +128,9 @@ async def managers_menu(bot, user_id):
         username = f'@{manager["username"]}' if manager['username'] else 'нет'
         manager_name = manager['manager_name']
         answer += (
-            f'ID Telegram: <code>{manager_user_id}</code>\n'
+            f'Telegram ID: <code>{manager_user_id}</code>\n'
             f'Telegram: {clickable_name} {username} \n'
-            f'Имя менеджера: {manager_name} \n'
+            f'Имя менеджера: <code>{manager_name}</code> \n'
             f'\n'
         )
     
@@ -195,13 +195,17 @@ async def manager_menu(bot, user_id, manager_user_id=None):
     clickable_name = f'<a href="tg://user?id={manager_user_id}">{name}</a>'
     username = f'@{manager["username"]}' if manager['username'] else 'нет'
     manager_name = manager['manager_name']
+    if manager_name:
+        manager_display = f'Имя менеджера для документов: <code>{manager_name}</code>'
+    else:
+        manager_display = f'Установите имя менеджера, чтобы открыть доступ'
 
     answer = (
         f'Выбран пользователь Telegram ID <code>{manager_user_id}</code> \n\n'
         f'{clickable_name} \n'
         f'Юзернейм: {username}\n'
         f'\n'
-        f'Имя менеджера: {manager_name}'
+        f'{manager_display}'
     )
     keyboard = kb(
         '✏️ Имя менеджера',
