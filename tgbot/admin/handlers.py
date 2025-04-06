@@ -125,7 +125,7 @@ async def managers_menu(bot, user_id):
         last_name = manager['last_name']
         name = f'{first_name} {last_name}' if last_name else first_name
         clickable_name = f'<a href="tg://user?id={manager_user_id}">{name}</a>'
-        username = f'@{manager["username"]}' if manager['username'] else 'нет'
+        username = f'@{manager["username"]}' if manager['username'] else ''
         manager_name = manager['manager_name']
         answer += (
             f'Telegram ID: <code>{manager_user_id}</code>\n'
@@ -157,7 +157,7 @@ async def declined_requests_menu(bot, user_id):
         last_name = manager['last_name']
         name = f'{first_name} {last_name}' if last_name else first_name
         clickable_name = f'<a href="tg://user?id={manager_user_id}">{name}</a>'
-        username = f'@{manager["username"]}' if manager['username'] else 'нет'
+        username = f'@{manager["username"]}' if manager['username'] else ''
         answer += (
             f'ID Telegram: <code>{manager_user_id}</code>\n'
             f'Telegram: {clickable_name} {username} \n'
